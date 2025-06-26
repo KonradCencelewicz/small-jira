@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php.dockerfile
+    container_name: small_jira_app
+    restart: unless-stopped
+    working_dir: /var/www/symfony
+    volumes:
+      - ./:/var/www/symfony
+      - ./var/cache:/var/www/symfony/var/cache
+      - ./var/log:/var/www/symfony/var/log
+    networks:
+      - symfony_network
+    depends_on:
+      - db
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: "mysql://symfony:symfony@db:3306/symfony?serverVersion=8.0"
+      MAILER_DSN: smtp://mailhog:1025
+    expose:
+      - 9000
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: symfony_nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/symfony:ro
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - symfony_network
+
+  db:
+    image: mysql:8.0
+    container_name: symfony_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    ports:
+      - "3306:3306"
+    volumes:
+      - symfony_db_data:/var/lib/mysql
+    networks:
+      - symfony_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: symfony_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    depends_on:
+      - db
+    networks:
+      - symfony_network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: symfony_mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - symfony_network
+
+volumes:
+  symfony_db_data:
+
+networks:
+  symfony_network:
+    driver: bridge

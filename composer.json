@@ -1,4 +1,6 @@
 {
+    "name": "small-jira/task-manager",
+    "description": "Prosty moduł zarządzania zadaniami",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
