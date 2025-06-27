@@ -6,6 +6,7 @@ use App\Auth\Dto\UserDto;
 use App\Auth\Entity\User;
 use App\Auth\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Auth\Service\UserManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManagerService implements UserManagerInterface
