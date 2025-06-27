@@ -1,0 +1,37 @@
+<form method="post" action="{{ path('app_login') }}">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+
+    {# CSRF token #}
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}" />
+
+    <div class="mb-3">
+        <label for="inputEmail" class="form-label">Email</label>
+        <input
+            type="email"
+            name="_username"
+            id="inputEmail"
+            class="form-control"
+            value="{{ lastUsername }}"
+            required
+            autofocus
+        >
+    </div>
+
+    <div class="mb-3">
+        <label for="inputPassword" class="form-label">Hasło</label>
+        <input
+            type="password"
+            name="_password"
+            id="inputPassword"
+            class="form-control"
+            required
+        >
+    </div>
+
+    <button type="submit" class="btn btn-primary">Zaloguj się</button>
+</form>
