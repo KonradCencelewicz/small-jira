@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+    <div class="jumbotron bg-primary text-white text-center py-5 mb-5">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-tasks me-3"></i>Witaj w Task Manager
+            </h1>
+            <p class="lead fs-5 mb-4">Profesjonalne narzędzie do zarządzania projektami i zadaniami</p>
+            <p class="fs-6 mb-4">Organizuj swoją pracę tak jak w JIRA - skutecznie i przejrzyście</p>
+            
+            {% if app.user %}
+                {# TODO KonradC add link to dashboard when it will be ready #}
+                {# <a href="{{ path('app_dashboard') }}" class="btn btn-light btn-lg">
+                    <i class="fas fa-tachometer-alt me-2"></i>Przejdź do Dashboard
+                </a> #}
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Zaloguj się
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

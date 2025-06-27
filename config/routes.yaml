@@ -2,3 +2,6 @@ auth_controllers:
     resource: ../src/Auth/Controller/
     type: attribute
 
+welcome_controllers:
+    resource: ../src/Welcome/Controller/
+    type: attribute
