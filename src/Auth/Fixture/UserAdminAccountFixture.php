@@ -2,31 +2,21 @@
 
 namespace App\Auth\Fixture;
 
-use App\Auth\Entity\User;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Auth\Service\UserManagerInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class UserAdminAccountFixture extends Fixture
 {
-    private UserPasswordHasherInterface $passwordHasher;
+    private UserManagerInterface $userService;
 
-    // Wstrzykuj hasher (Symfony >= 5.3)
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(UserManagerInterface $userService)
     {
-        $this->passwordHasher = $passwordHasher;
+        $this->userService = $userService;
     }
 
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $om): void
     {
-        $user = new User();
-        $user->setEmail('admin@example.com');
-        $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword(
-            $this->passwordHasher->hashPassword($user, 'qwerty123')
-        );
-
-        $manager->persist($user);
-        $manager->flush();
+        $this->userService->createUser('admin@example.com', 'qwerty123', ['ROLE_ADMIN']);
     }
 }
