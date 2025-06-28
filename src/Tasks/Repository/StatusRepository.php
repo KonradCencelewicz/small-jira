@@ -23,12 +23,10 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
      */
     public function all(): array
     {
-        $statuses = $this->createQueryBuilder('s')
+        return $this->createQueryBuilder('s')
             ->orderBy('s.sequence', 'ASC')
             ->getQuery()
             ->getResult();
-
-        return array_map(fn(Status $status) => StatusDto::fromEntity($status), $statuses);
     }
 
     public function findOneById(int $id): ?Status

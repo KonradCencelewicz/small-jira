@@ -8,7 +8,7 @@ use App\Tasks\Entity\Status;
 interface StatusRepositoryInterface
 {
     /**
-     * @return StatusDto[]
+     * @return Status[]
      */
     public function all(): array;
 

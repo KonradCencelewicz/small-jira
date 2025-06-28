@@ -2,15 +2,14 @@
 
 namespace App\Tasks\Repository;
 
-use App\Tasks\Dto\TaskDto;
-use App\Tasks\Dto\TaskWithStatusDto;
+use App\Tasks\Entity\Task;
 
 interface TaskRepositoryInterface
 {
     /**
-     * @return TaskDto[]
+     * @return Task[]
      */
     public function allWithStatus(): array;
 
-    public function findOneByIdWithStatus(int $id): ?TaskWithStatusDto;
+    public function findOneByIdWithStatus(int $id): ?Task;
 }

@@ -19,23 +19,21 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
     }
 
     /**
-     * @return TaskWithStatusDto[]
+     * @return Task[]
      */
     public function allWithStatus(): array
     {
-        $tasks = $this->createQueryBuilder('t')
+        return $this->createQueryBuilder('t')
             ->leftJoin('t.status', 's')
             ->addSelect('s')
             ->orderBy('t.deadline', 'ASC')
             ->getQuery()
             ->getResult();
-
-        return array_map(fn(Task $task) => TaskWithStatusDto::fromEntity($task), $tasks);
     }
 
-    public function findOneByIdWithStatus(int $id): ?TaskWithStatusDto
+    public function findOneByIdWithStatus(int $id): ?Task
     {
-        $task = $this->createQueryBuilder('t')
+        return $this->createQueryBuilder('t')
             ->leftJoin('t.status', 's')
             ->addSelect('s')
             ->where('t.id = :id')
@@ -43,7 +41,5 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
             ->orderBy('t.deadline', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
-        
-            return $task ? TaskWithStatusDto::fromEntity($task) : null;    
         }
 }
