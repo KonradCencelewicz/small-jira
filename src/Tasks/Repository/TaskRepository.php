@@ -32,4 +32,18 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
 
         return array_map(fn(Task $task) => TaskWithStatusDto::fromEntity($task), $tasks);
     }
+
+    public function findOneByIdWithStatus(int $id): ?TaskWithStatusDto
+    {
+        $task = $this->createQueryBuilder('t')
+            ->leftJoin('t.status', 's')
+            ->addSelect('s')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy('t.deadline', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
+        
+            return $task ? TaskWithStatusDto::fromEntity($task) : null;    
+        }
 }
