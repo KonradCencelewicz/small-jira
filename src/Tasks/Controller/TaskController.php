@@ -3,16 +3,18 @@
 namespace App\Tasks\Controller;
 
 use App\Tasks\Dto\TaskCreateDto;
+use App\Tasks\Service\TaskServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Tasks\Repository\TaskRepositoryInterface;
 use App\Tasks\Repository\StatusRepositoryInterface;
-use App\Tasks\Service\TaskServiceInterface;
 use App\Tasks\Service\TaskStatusGrouperServiceInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 final class TaskController extends AbstractController
 {
     #[Route('/task/dashboard', name: 'app_task_dashboard')]

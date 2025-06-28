@@ -5,8 +5,10 @@ namespace App\Tasks\Controller;
 use App\Tasks\Service\TaskServiceInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[IsGranted('ROLE_ADMIN')]
 final class TaskStatusController extends AbstractController
 {
     private TaskServiceInterface $taskService;
