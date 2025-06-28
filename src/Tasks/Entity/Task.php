@@ -3,6 +3,8 @@
 namespace App\Tasks\Entity;
 
 use App\Tasks\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -25,6 +27,20 @@ class Task
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $status = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subtasks')]
+    private ?self $parentTask = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parentTask')]
+    private Collection $subtasks;
+
+    public function __construct()
+    {
+        $this->subtasks = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +91,48 @@ class Task
     public function setStatus(?Status $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getParentTask(): ?self
+    {
+        return $this->parentTask;
+    }
+
+    public function setParentTask(?self $parentTask): static
+    {
+        $this->parentTask = $parentTask;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getSubtasks(): Collection
+    {
+        return $this->subtasks;
+    }
+
+    public function addSubtask(self $subtask): static
+    {
+        if (!$this->subtasks->contains($subtask)) {
+            $this->subtasks->add($subtask);
+            $subtask->setParentTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubtask(self $subtask): static
+    {
+        if ($this->subtasks->removeElement($subtask)) {
+            // set the owning side to null (unless already changed)
+            if ($subtask->getParentTask() === $this) {
+                $subtask->setParentTask(null);
+            }
+        }
 
         return $this;
     }
