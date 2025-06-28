@@ -3,7 +3,6 @@
 namespace App\Tasks\Repository;
 
 use App\Tasks\Entity\Task;
-use App\Tasks\Dto\TaskWithStatusDto;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Tasks\Repository\TaskRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
