@@ -5,3 +5,7 @@ auth_controllers:
 welcome_controllers:
     resource: ../src/Welcome/Controller/
     type: attribute
+
+tasks_controllers:
+    resource: ../src/Tasks/Controller/
+    type: attribute
