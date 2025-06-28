@@ -5,7 +5,6 @@ namespace App\Tasks\Service;
 use App\Tasks\Dto\TaskDto;
 use App\Tasks\Entity\Task;
 use App\Tasks\Dto\TaskCreateDto;
-use App\Tasks\Dto\TaskWithStatusDto;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Tasks\Service\TaskServiceInterface;
 use App\Tasks\Repository\StatusRepositoryInterface;
@@ -35,9 +34,9 @@ final class TaskService implements TaskServiceInterface
     }
 
 
-    public function updateTaskStatus(int $taskId, int $statusId): TaskWithStatusDto
+    public function updateTaskStatus(int $taskId, int $statusId): TaskDto
     {
-        $task = $this->taskRepository->findOneByIdWithStatus($taskId);
+        $task = $this->taskRepository->findOneById($taskId);
         $status = $this->statusRepository->findOneById($statusId);
 
         $task->setStatus($status);
@@ -45,6 +44,6 @@ final class TaskService implements TaskServiceInterface
         $this->em->persist($task);
         $this->em->flush();
 
-        return TaskWithStatusDto::fromEntity($task);
+        return TaskDto::fromEntity($task);
     }
 }

@@ -2,15 +2,15 @@
 
 namespace App\Tasks\Service;
 
+use App\Tasks\Dto\TaskDto;
 use App\Tasks\Entity\Task;
-use App\Tasks\Dto\TaskWithStatusDto;
 use App\Tasks\Service\TaskStatusGrouperServiceInterface;
 
 class TaskStatusGrouperService implements TaskStatusGrouperServiceInterface
 {
     /**
      * @param Task[] $tasks
-     * @return array<int, TaskWithStatusDto[]>
+     * @return array<int, TaskDto[]>
      */
     public function groupByStatus(array $tasks): array
     {
@@ -23,7 +23,7 @@ class TaskStatusGrouperService implements TaskStatusGrouperServiceInterface
                 $grouped[$statusId] = [];
             }
 
-            $grouped[$statusId][] = TaskWithStatusDto::fromEntity($task);
+            $grouped[$statusId][] = TaskDto::fromEntity($task);
         }
 
         return $grouped;
