@@ -3,41 +3,33 @@
 namespace App\Tasks\Repository;
 
 use App\Tasks\Entity\Task;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Tasks\Dto\TaskWithStatusDto;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Tasks\Repository\TaskRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Task>
  */
-class TaskRepository extends ServiceEntityRepository
+class TaskRepository extends ServiceEntityRepository implements TaskRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Task::class);
     }
 
-//    /**
-//     * @return Task[] Returns an array of Task objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return TaskWithStatusDto[]
+     */
+    public function allWithStatus(): array
+    {
+        $tasks = $this->createQueryBuilder('t')
+            ->leftJoin('t.status', 's')
+            ->addSelect('s')
+            ->orderBy('t.deadline', 'ASC')
+            ->getQuery()
+            ->getResult();
 
-//    public function findOneBySomeField($value): ?Task
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return array_map(fn(Task $task) => TaskWithStatusDto::fromEntity($task), $tasks);
+    }
 }
