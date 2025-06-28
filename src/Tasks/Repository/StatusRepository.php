@@ -30,4 +30,9 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
 
         return array_map(fn(Status $status) => StatusDto::fromEntity($status), $statuses);
     }
+
+    public function findOneById(int $id): ?Status
+    {
+        return $this->find($id);
+    }
 }
