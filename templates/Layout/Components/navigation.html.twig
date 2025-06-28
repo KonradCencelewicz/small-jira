@@ -9,11 +9,11 @@
             {% if is_granted('ROLE_ADMIN') %}
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="{{ app.request.get('_route') == 'app_task_dashboard' ? 'nav-link active' : 'nav-link' }}" href="/dashboard">Tablica</a>
+                        <a class="{{ app.request.get('_route') == 'app_task_dashboard' ? 'nav-link active' : 'nav-link' }}" href="{{ path('app_task_dashboard') }}">Tablica</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="{{ app.request.get('_route') == 'app_tasks' ? 'nav-link active' : 'nav-link' }}" href="/tasks">Zadania</a>
-                    </li>
+                    {# <li class="nav-item">
+                        <a class="{{ app.request.get('_route') == 'app_tasks' ? 'nav-link active' : 'nav-link' }}" href="{{ path('app_tasks_dashboard') }}">Zadania</a>
+                    </li> #}
                 </ul>
             {% endif %}
             <ul class="navbar-nav ms-auto">
@@ -22,11 +22,11 @@
                         <a class="nav-link" href="#">Zalogowano jako {{ app.user.email }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">Wyloguj</a>
+                        <a class="nav-link" href="{{ path('app_logout') }}">Wyloguj</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="{{ app.request.get('_route') == 'app_login' ? 'nav-link active' : 'nav-link' }}" href="/login">Zaloguj</a>
+                        <a class="{{ app.request.get('_route') == 'app_login' ? 'nav-link active' : 'nav-link' }}" href="{{ path('app_login') }}">Zaloguj</a>
                     </li>
                 {% endif %}
             </ul>
