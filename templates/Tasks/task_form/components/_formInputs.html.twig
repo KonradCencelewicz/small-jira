@@ -1,0 +1,27 @@
+<div class="mb-3">
+    <label for="title" class="form-label">Tytuł</label>
+    <input type="text" class="form-control" id="title" name="title" value="{{ task.title ?? '' }}" required>
+</div>
+<div class="mb-3">
+    <label for="description" class="form-label">Opis</label>
+    <textarea class="form-control" id="description" name="description" value="{{ task.description ?? '' }}"></textarea>
+</div>
+<div class="mb-3">
+    <label for="deadline" class="form-label">Termin (opcjonalny)</label>
+    <input type="datetime-local" class="form-control" id="deadline" name="deadline" value="{{ task is defined and task.deadline is not empty ? task.deadline|date('Y-m-d\\TH:i') : '' }}">
+</div>
+<div class="mb-3">
+    <label for="status" class="form-label">Status</label>
+    <select class="form-select" id="status" name="status" required>
+        <option value="">Wybierz status</option>
+        {% for status in statuses %}
+            <option 
+            value="{{ status.id }}" 
+            {% if task is defined and task.status is defined and task.status.id == status.id %}
+                selected
+            {% endif %}
+            >{{ status.label }}</option>
+        {% endfor %}
+    </select>
+</div>
+<button type="submit" class="btn btn-success">Utwórz zadanie</button>

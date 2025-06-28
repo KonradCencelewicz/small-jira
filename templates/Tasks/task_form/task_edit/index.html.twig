@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form method="POST" action="{{ path('app_task_update', { id: task.id }) }}">
+        {% include 'Tasks/task_form/components/_formInputs.html.twig' with { 'task': task, 'statuses': statuses } %}
+    </form>
+{% endblock %}
