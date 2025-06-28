@@ -2,6 +2,7 @@
 
 namespace App\Auth\Fixture;
 
+use App\Auth\Enum\RoleEnum;
 use Doctrine\Persistence\ObjectManager;
 use App\Auth\Service\UserManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -17,6 +18,7 @@ class UserAdminAccountFixture extends Fixture
 
     public function load(ObjectManager $om): void
     {
-        $this->userService->createUser('admin@example.com', 'qwerty123', ['ROLE_ADMIN']);
+        $this->userService->createUser('admin@example.com', 'qwerty123', [RoleEnum::ADMIN]);
+        $this->userService->createUser('user@example.com', 'qwerty123', [RoleEnum::USER]);
     }
 }
