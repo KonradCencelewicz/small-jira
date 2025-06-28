@@ -2,27 +2,28 @@
 
 namespace App\Tasks\Service;
 
-use App\Tasks\Dto\TaskDto;
+use App\Tasks\Entity\Task;
+use App\Tasks\Dto\TaskWithStatusDto;
 use App\Tasks\Service\TaskStatusGrouperServiceInterface;
 
 class TaskStatusGrouperService implements TaskStatusGrouperServiceInterface
 {
     /**
-     * @param TaskWithStatusDto[] $tasks
-     * @return array<int, TaskDto[]> // gdzie key to statusId
+     * @param Task[] $tasks
+     * @return array<int, TaskWithStatusDto[]>
      */
     public function groupByStatus(array $tasks): array
     {
         $grouped = [];
 
         foreach ($tasks as $task) {
-            $statusId = $task->status->id;
+            $statusId = $task->getStatus()->getId();
             
             if (!isset($grouped[$statusId])) {
                 $grouped[$statusId] = [];
             }
 
-            $grouped[$statusId][] = $task;
+            $grouped[$statusId][] = TaskWithStatusDto::fromEntity($task);
         }
 
         return $grouped;
