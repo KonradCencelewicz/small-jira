@@ -2,7 +2,6 @@
 
 namespace App\Tasks\Dto;
 
-use DateTime;
 use App\Tasks\Entity\Task;
 
 class TaskDto
