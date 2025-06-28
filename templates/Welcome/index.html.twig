@@ -13,10 +13,9 @@
             <p class="fs-6 mb-4">Organizuj swoją pracę tak jak w JIRA - skutecznie i przejrzyście</p>
             
             {% if app.user %}
-                {# TODO KonradC add link to dashboard when it will be ready #}
-                {# <a href="{{ path('app_dashboard') }}" class="btn btn-light btn-lg">
+                <a href="{{ path('app_task_dashboard') }}" class="btn btn-light btn-lg">
                     <i class="fas fa-tachometer-alt me-2"></i>Przejdź do Dashboard
-                </a> #}
+                </a>
             {% else %}
                 <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg">
                     <i class="fas fa-sign-in-alt me-2"></i>Zaloguj się

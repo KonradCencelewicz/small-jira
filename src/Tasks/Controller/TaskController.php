@@ -6,6 +6,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Tasks\Repository\StatusRepositoryInterface;
 use App\Tasks\Repository\TaskRepositoryInterface;
+use App\Tasks\Service\TaskStatusGrouperService;
+use App\Tasks\Service\TaskStatusGrouperServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class TaskController extends AbstractController
@@ -13,14 +15,14 @@ final class TaskController extends AbstractController
     #[Route('/task/dashboard', name: 'app_task_dashboard')]
     public function index(
         TaskRepositoryInterface $taskRepository, 
-        StatusRepositoryInterface $statusRepository
+        StatusRepositoryInterface $statusRepository,
+        TaskStatusGrouperServiceInterface $taskGrouper
     ): Response
     {
-
         return $this->render(
             'Tasks/tasks_dashboard/index.html.twig',
             [
-                'tasks' => $taskRepository->allWithStatus(),
+                'tasks' => $taskGrouper->groupByStatus($taskRepository->allWithStatus()),
                 'statuses' => $statusRepository->all(),
             ]
         );
