@@ -9,7 +9,14 @@ interface TaskRepositoryInterface
     /**
      * @return Task[]
      */
-    public function allWithStatus(): array;
+    public function all(): array;
 
-    public function findOneByIdWithStatus(int $id): ?Task;
+    /**
+     * @return Task[]
+     */
+    public function allWithParent(): array;
+
+    public function findOneById(int $id): ?Task;
+
+    public function findTaskWithParent(int $taskId): ?Task;
 }

@@ -27,7 +27,7 @@ final class TaskController extends AbstractController
         return $this->render(
             'Tasks/tasks_dashboard/index.html.twig',
             [
-                'tasks' => $taskGrouper->groupByStatus($taskRepository->allWithStatus()),
+                'tasks' => $taskGrouper->groupByStatus($taskRepository->allWithParent()),
                 'statuses' => $statusRepository->all(),
             ]
         );
@@ -79,7 +79,7 @@ final class TaskController extends AbstractController
         return $this->render(
             'Tasks//task_form/task_edit/index.html.twig',
             [
-                'task' => $taskRepository->findOneByIdWithStatus($id),
+                'task' => $taskRepository->findOneById($id),
                 'statuses' => $statusRepository->all()
             ]
         );

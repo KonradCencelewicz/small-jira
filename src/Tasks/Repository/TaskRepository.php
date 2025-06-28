@@ -20,7 +20,7 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
     /**
      * @return Task[]
      */
-    public function allWithStatus(): array
+    public function all(): array
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.status', 's')
@@ -30,7 +30,22 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
             ->getResult();
     }
 
-    public function findOneByIdWithStatus(int $id): ?Task
+    /**
+     * @return Task[]
+     */
+    public function allWithParent(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.status', 's')
+            ->addSelect('s')
+            ->leftJoin('t.parentTask', 'parentTask')
+            ->addSelect('parentTask')
+            ->orderBy('t.deadline', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findOneById(int $id): ?Task
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.status', 's')
@@ -40,5 +55,18 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
             ->orderBy('t.deadline', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
-        }
+    }
+
+    public function findTaskWithParent(int $taskId): ?Task
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.status', 's')
+            ->addSelect('s')
+            ->leftJoin('t.parentTask', 'parentTask')
+            ->addSelect('parentTask')
+            ->where('t.id = :taskId')
+            ->setParameter('taskId', $taskId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
