@@ -3,6 +3,7 @@
 namespace App\Tasks\Service;
 
 use App\Tasks\Dto\TaskDto;
+use App\Tasks\Service\TaskStatusGrouperServiceInterface;
 
 class TaskStatusGrouperService implements TaskStatusGrouperServiceInterface
 {
