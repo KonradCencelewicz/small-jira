@@ -2,7 +2,6 @@
 
 namespace App\Tasks\Dto;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Tasks\Validator\Constraints as AppAssert;
 
