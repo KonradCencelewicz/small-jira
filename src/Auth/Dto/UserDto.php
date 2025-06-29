@@ -9,7 +9,6 @@ class UserDto
     public ?int $id = null;
     public string $email;
     public array $roles = [];
-    // Add other fields you want to expose or transfer
 
     public function __construct(string $email, array $roles = [], ?int $id = null)
     {
