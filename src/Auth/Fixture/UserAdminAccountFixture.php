@@ -18,7 +18,7 @@ class UserAdminAccountFixture extends Fixture
 
     public function load(ObjectManager $om): void
     {
-        $this->userService->createUser('admin@example.com', 'qwerty123', [RoleEnum::ADMIN]);
-        $this->userService->createUser('user@example.com', 'qwerty123', [RoleEnum::USER]);
+        $this->userService->createUser('admin@example.com', 'qwerty123', [RoleEnum::ADMIN->value]);
+        $this->userService->createUser('user@example.com', 'qwerty123', [RoleEnum::USER->value]);
     }
 }
