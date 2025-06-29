@@ -30,7 +30,8 @@ final class TaskStatusController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'task' => $taskData
+            'task' => $taskData[0],
+            'status' => $taskData[1]
         ]);
     }
 }
