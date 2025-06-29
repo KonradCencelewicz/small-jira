@@ -35,12 +35,20 @@ final class TaskController extends AbstractController
 
     #[Route('/task/create', name: 'app_task_create', methods: ['GET'])]
     public function create(
+        Request $request,
+        TaskRepositoryInterface $taskRepository,
         StatusRepositoryInterface $statusRepository,
     ): Response
     {
+        $parentTaskId = $request->query->get('parent_task_id');;
+        $parentTask = $parentTaskId ? $taskRepository->findOneById($parentTaskId) : null;
+
         return $this->render(
             'Tasks/task_form/task_create/index.html.twig',
-            ['statuses' => $statusRepository->all()]
+            [
+                'parentTask' => $parentTask,
+                'statuses' => $statusRepository->all()
+            ]
         );
     }
 
@@ -49,8 +57,12 @@ final class TaskController extends AbstractController
         Request $request,
         ValidatorInterface $validator,
         TaskServiceInterface $taskService,
+        TaskRepositoryInterface $taskRepository,
         StatusRepositoryInterface $statusRepository
     ): Response {
+        $parentTaskId = $request->request->get('parent_task_id');
+        $parentTask = $parentTaskId ? $taskRepository->findOneById($parentTaskId) : null;
+
         $dto = new TaskCreateDto();
         $errors = $validator->validate($dto->fromRequest($request));
 
@@ -58,18 +70,19 @@ final class TaskController extends AbstractController
             return $this->render(
                 'Tasks/task_form/task_create/index.html.twig',
                 [
+                    'parent_task_id' => $parentTask,
                     'statuses' => $statusRepository->all(),
                     'errors' => $errors
                 ]
             );
         }
 
-        $taskService->createTask($dto);
+        $taskService->createTask($dto, $parentTask);
 
         return $this->redirectToRoute('app_task_dashboard');
     }
 
-    #[Route('/task/{id}/edit', name: 'app_task_edit', methods: ['GET'])]
+    #[Route('/task/{id}/edit', name: 'app_task_edit', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function edit(
         int $id,
         TaskRepositoryInterface $taskRepository, 
@@ -85,7 +98,7 @@ final class TaskController extends AbstractController
         );
     }
 
-    #[Route('/task/{id}/edit', name: 'app_task_update', methods: ['POST'])]
+    #[Route('/task/{id}/edit', name: 'app_task_update', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function update(
         Request $request,
         ValidatorInterface $validator,

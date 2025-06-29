@@ -18,14 +18,17 @@ final class TaskService implements TaskServiceInterface
         private StatusRepositoryInterface $statusRepository,
     ) {}
 
-    public function createTask(TaskCreateDto $dto): TaskDto
+    public function createTask(TaskCreateDto $dto, ?Task $parentTask): TaskDto
     {
         $task = new Task();
         $task->setTitle($dto->title);
         $task->setDescription($dto->description);
         $task->setDeadline($dto->deadline);
+
         $status = $this->statusRepository->findOneById($dto->statusId);
         $task->setStatus($status);
+        
+        $parentTask && $task->setParentTask($parentTask);
 
         $this->em->persist($task);
         $this->em->flush();
