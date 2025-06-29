@@ -20,7 +20,7 @@ final class TaskStatusController extends AbstractController
         $this->taskService = $taskService;
     }
 
-    #[Route('/task/{taskId}/status/{statusId}', name: 'app_task_status', methods: ['POST'])]
+    #[Route('/task/{taskId}/status/{statusId}', name: 'app_task_status', methods: ['POST'], requirements: ['taskId' => '\d+', 'statusId' => '\d+'])]
     public function update(
         int $taskId,
         int $statusId
