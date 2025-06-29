@@ -69,4 +69,25 @@ class TaskRepository extends ServiceEntityRepository implements TaskRepositoryIn
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function isRootTask(int $id): bool
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->where('t.id = :id')
+            ->andWhere('t.parentTask IS NULL')
+            ->setParameter('id', $id);
+
+        return (int)$qb->getQuery()->getSingleScalarResult() > 0;
+    }
+
+    public function taskExist(int $id): bool
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->where('t.id = :id')
+            ->setParameter('id', $id);
+
+        return (int)$qb->getQuery()->getSingleScalarResult() > 0;
+    }
 }

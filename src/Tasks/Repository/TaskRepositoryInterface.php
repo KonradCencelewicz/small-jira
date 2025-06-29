@@ -19,4 +19,8 @@ interface TaskRepositoryInterface
     public function findOneById(int $id): ?Task;
 
     public function findTaskWithParent(int $taskId): ?Task;
+
+    public function isRootTask(int $id): bool;
+        
+    public function taskExist(int $id): bool;
 }
