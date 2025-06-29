@@ -4,8 +4,9 @@ namespace App\Tasks\Dto;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Tasks\Validator\Constraints as AppAssert;
 
-class TaskCreateDto
+class TaskCreateDto extends TaskAbstractDto
 {
     #[Assert\NotBlank(message: 'Tytuł jest wymagany.')]
     #[Assert\Length(max: 255, maxMessage: 'Tytuł nie może mieć więcej niż 255 znaków.')]
@@ -19,13 +20,27 @@ class TaskCreateDto
     #[Assert\NotBlank(message: 'Status jest wymagany.')]
     public string $statusId;
 
-    public function fromRequest(Request $request): self
-    {
-        $this->title = $request->request->get('title');
-        $this->description = $request->request->get('description');
-        $this->deadline = $request->request->get('deadline') ? new \DateTime($request->request->get('deadline')) : null;
-        $this->statusId = $request->request->get('status');
+    #[AppAssert\IsRootTask]
+    public ?int $parentTaskId;
 
-        return $this;
+    public function __construct(array $data) {
+        parent::__construct(
+            $data['title'],
+            $data['description'],
+            $data['deadline'],
+            $data['statusId'],
+            $data['parentTaskId'],
+        );
+    }
+
+    public static function fromRequest(Request $request): self
+    {
+        return new self([
+            'title' => $request->request->get('title'),
+            'description' => $request->request->get('description'),
+            'deadline' => $request->request->get('deadline') ? new \DateTime($request->request->get('deadline')) : null,
+            'statusId' => (int) $request->request->get('status'),
+            'parentTaskId' => (int) $request->request->get('parent_task_id')
+        ]);
     }
 }
