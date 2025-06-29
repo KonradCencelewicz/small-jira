@@ -8,10 +8,10 @@ use App\Tasks\Dto\StatusDto;
 class StatusMapper implements StatusMapperInterface
 {
     /**
-     * Mapuje tablicę encji Status na tablicę StatusDto z kluczami jako ID statusów.
+     * Map Status dto to statusId and return array
      *
      * @param Status[] $statuses
-     * @return StatusDto[] Klucz: ID statusu, wartość: StatusDto
+     * @return StatusDto[] Key: statusId, value: StatusDto
      */
     public function mapById(array $statuses): array
     {

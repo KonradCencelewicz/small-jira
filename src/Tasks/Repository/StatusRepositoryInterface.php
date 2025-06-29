@@ -2,7 +2,6 @@
 
 namespace App\Tasks\Repository;
 
-use App\Tasks\Dto\StatusDto;
 use App\Tasks\Entity\Status;
 
 interface StatusRepositoryInterface

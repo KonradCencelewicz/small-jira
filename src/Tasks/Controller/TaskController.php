@@ -44,13 +44,10 @@ final class TaskController extends AbstractController
         StatusMapperInterface $statusMapper
     ): Response
     {
-        $parentTaskId = $request->query->get('parent_task_id');;
-        $parentTask = $parentTaskId ? $taskRepository->findOneById($parentTaskId) : null;
-
         return $this->render(
             'Tasks/task_form/task_create/index.html.twig',
             [
-                'parentTask' => $parentTask,
+                'parentTaskId' => $request->query->get('parent_task_id'),
                 'statuses' => $statusMapper->mapById($statusRepository->all()),
             ]
         );

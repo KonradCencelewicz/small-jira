@@ -2,7 +2,6 @@
 
 namespace App\Tasks\Repository;
 
-use App\Tasks\Dto\StatusDto;
 use App\Tasks\Entity\Status;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Tasks\Repository\StatusRepositoryInterface;
@@ -19,7 +18,7 @@ class StatusRepository extends ServiceEntityRepository implements StatusReposito
     }
 
     /**
-     * @return StatusDto[]
+     * @return Status[]
      */
     public function all(): array
     {
