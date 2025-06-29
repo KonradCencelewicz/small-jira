@@ -1,0 +1,39 @@
+<div class="card mb-3" data-task-id="{{ task.id }}">
+<div class="card-body">
+    <h5 class="card-title">
+        {{ task.title }}
+        {% if task.parentTaskId %}
+            <span class="badge rounded-pill bg-primary ms-2" title="Zadanie podrzędne">
+                Subtask
+            </span>
+        {% endif %}
+    </h5>
+    <span class="badge bg-{{ statuses[task.statusId].color|lower }}" data-status-badge>
+    {{ statuses[task.statusId].label|capitalize }}
+    </span>
+    {# Deadline badge, jeśli jest ustawiony #}
+    {% if task.deadline %}
+    <span class="badge bg-info text-dark ms-2">
+        Deadline: {{ task.deadline|date('Y-m-d') }}
+    </span>
+    {% endif %}
+    <div class="mt-3">
+        <button type="button"
+            class="btn btn-outline-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#taskModal"
+            data-bs-title="{{ task.title }}"
+            data-bs-description="{{ task.description|default('Brak opisu') }}"
+            data-bs-deadline="{{ task.deadline ? task.deadline|date('Y-m-d H:i') : 'Brak' }}"
+            data-bs-status="{{ statuses[task.statusId].label }}"
+            data-bs-status-color="{{ statuses[task.statusId].color }}"
+            data-bs-task-id="{{ task.id }}"
+            >
+        Podgląd
+    </button>
+    <a href="{{ path('app_task_edit', {'id': task.id}) }}" class="btn btn-primary btn-sm">
+        Edytuj
+    </a>
+    </div>
+</div>
+</div>

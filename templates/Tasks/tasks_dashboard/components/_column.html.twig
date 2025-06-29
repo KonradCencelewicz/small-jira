@@ -1,0 +1,55 @@
+<div class="col-md-4">
+    <h4 class="text-center text-capitalize">{{ status.label }}</h4>
+    <div class="card bg-light mb-3">
+        <div class="card-body p-2 task-column" id="column-{{ status.id }}" data-status="{{ status.id }}">
+            {% if tasks[status.id] is defined  %}
+                {% for task in tasks[status.id] %}
+                    {% include 'Tasks/tasks_dashboard/components/_card.html.twig' with {task: task, statuses: statuses} %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('turbo:load', () => {
+        const columns = document.querySelectorAll('.task-column');
+        columns.forEach(column => {
+            new Sortable(column, {
+                group: 'tasks',
+                animation: 150,
+                sort: false,
+                onAdd: function (evt) {
+                    const taskEl = evt.item;
+                    const taskId = taskEl.dataset.taskId;
+                    const newStatusId = evt.to.dataset.status;
+                    fetch(`/task/${taskId}/status/${newStatusId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        const statusColor = data.status.color;
+                        const statusLabel = data.status.label;
+                        const badge = taskEl.querySelector('[data-status-badge]');
+                        if (badge) {
+                            // Remove previous color classes
+                            badge.classList.remove('bg-secondary', 'bg-success', 'bg-danger');
+                            // Update label and class
+                            const colorClass = `bg-${statusColor}`;
+                            badge.classList.add(colorClass);
+                            badge.textContent = statusLabel.charAt(0).toUpperCase() + statusLabel.slice(1);
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Status update failed:', err);
+                        // Optional: revert move
+                        evt.from.appendChild(evt.item);
+                    });
+                    }
+            });
+        });
+    });
+</script>

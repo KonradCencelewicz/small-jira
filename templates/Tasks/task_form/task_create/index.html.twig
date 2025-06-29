@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form method="POST" action="{{ path('app_task_store') }}">
-        {% include 'Tasks/task_form/components/_formInputs.html.twig' with { 'statuses': statuses } %}
-    </form>
+    {% include 'Tasks/task_form/components/_formInputs.html.twig' with { action: path('app_task_store'), statuses: statuses } %}
 {% endblock %}

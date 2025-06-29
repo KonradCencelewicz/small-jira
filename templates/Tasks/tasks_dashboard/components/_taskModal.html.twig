@@ -1,0 +1,40 @@
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="taskModalLabel">Szczegóły zadania</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+    </div>
+    <div class="modal-body">
+        <p><strong>Tytuł:</strong> <span id="modalTitle"></span></p>
+        <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+        <p><strong>Deadline:</strong> <span id="modalDeadline"></span></p>
+        <p><strong>Opis:</strong></p>
+        <p id="modalDescription" class="border p-2 bg-light rounded" style="white-space: pre-wrap;"></p>
+    </div>
+    <div class="modal-footer">
+        <a id="createSubtaskBtn" class="btn btn-primary">
+            Dodaj subtask
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+    </div>
+    </div>
+</div>
+</div>
+
+<script>
+    document.addEventListener('turbo:load', () => {
+        const taskModal = document.getElementById('taskModal');
+        taskModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const createSubtaskBtn = document.getElementById('createSubtaskBtn');
+            const parentTaskId = button.getAttribute('data-bs-task-id');
+            document.getElementById('modalTitle').textContent = button.getAttribute('data-bs-title');
+            document.getElementById('modalStatus').textContent = button.getAttribute('data-bs-status');
+            document.getElementById('modalDeadline').textContent = button.getAttribute('data-bs-deadline');
+            document.getElementById('modalDescription').textContent = button.getAttribute('data-bs-description');
+            createSubtaskBtn.href = `/task/create?parent_task_id=${parentTaskId}`;
+        });
+    });
+</script>
