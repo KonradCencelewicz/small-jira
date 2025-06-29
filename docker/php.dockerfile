@@ -2,6 +2,9 @@
 
 FROM php:8.2-fpm
 
+ARG LOAD_SETUP=false
+ENV LOAD_SETUP=${LOAD_SETUP}
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -34,6 +37,10 @@ RUN composer install --no-interaction || cat /tmp/composer.log || true
 
 # Set permissions for Symfony var/cache and var/log
 RUN chown -R www-data:www-data var/cache var/log
+
+#Set and run fixtures if needed
+RUN chmod +x ./docker/scripts/load_fixtures.sh
+RUN chmod +x ./docker/scripts/load_migrations.sh
 
 # Expose port 9000 for php-fpm
 EXPOSE 9000
