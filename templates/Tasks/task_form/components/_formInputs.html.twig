@@ -1,15 +1,22 @@
 <div class="mb-3">
     <label for="title" class="form-label">Tytuł</label>
-    <input type="text" class="form-control" id="title" name="title" value="{{ task.title ?? '' }}" required>
+    <input type="text" class="form-control" id="title" name="title" value="{{ task.title ?? '' }}" maxlength="255" required>
 </div>
 <div class="mb-3">
     <label for="description" class="form-label">Opis</label>
-    <textarea class="form-control" id="description" name="description" value="{{ task.description ?? '' }}"></textarea>
+    <textarea class="form-control" id="description" name="description" value="{{ task.description ?? '' }}" maxlength="4000"></textarea>
 </div>
 <div class="mb-3">
     <label for="deadline" class="form-label">Termin (opcjonalny)</label>
     <input type="datetime-local" class="form-control" id="deadline" name="deadline" value="{{ task is defined and task.deadline is not empty ? task.deadline|date('Y-m-d\\TH:i') : '' }}">
 </div>
+
+<input type="number" class="form-control" id="id" name="id" value="{{ task is defined ? task.id ?? null }}" hidden>
+<input type="number" class="form-control" id="parent_task_id" name="parent_task_id" value="{{ parentTaskId is defined ? parentTaskId ?? null }}" hidden>
+{# CSRF token #}
+<input type="hidden" name="_csrf_token"
+       value="{{ csrf_token('authenticate') }}" />
+
 <div class="mb-3">
     <label for="status" class="form-label">Status</label>
     <select class="form-select" id="status" name="status" required>
@@ -24,4 +31,4 @@
         {% endfor %}
     </select>
 </div>
-<button type="submit" class="btn btn-success">Utwórz zadanie</button>
+<button type="submit" class="btn btn-success">{{ task is defined ? 'Edytuj' : 'Utwórz'}} zadanie</button>
