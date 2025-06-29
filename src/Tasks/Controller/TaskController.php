@@ -3,6 +3,8 @@
 namespace App\Tasks\Controller;
 
 use App\Tasks\Dto\TaskCreateDto;
+use App\Tasks\Dto\TaskDto;
+use App\Tasks\Mapper\StatusMapperInterface;
 use App\Tasks\Service\TaskServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,14 +23,15 @@ final class TaskController extends AbstractController
     public function index(
         TaskRepositoryInterface $taskRepository, 
         StatusRepositoryInterface $statusRepository,
-        TaskStatusGrouperServiceInterface $taskGrouper
+        TaskStatusGrouperServiceInterface $taskGrouper,
+        StatusMapperInterface $statusMapper
     ): Response
     {
         return $this->render(
             'Tasks/tasks_dashboard/index.html.twig',
             [
                 'tasks' => $taskGrouper->groupByStatus($taskRepository->allWithParent()),
-                'statuses' => $statusRepository->all(),
+                'statuses' => $statusMapper->mapById($statusRepository->all()),
             ]
         );
     }
@@ -38,6 +41,7 @@ final class TaskController extends AbstractController
         Request $request,
         TaskRepositoryInterface $taskRepository,
         StatusRepositoryInterface $statusRepository,
+        StatusMapperInterface $statusMapper
     ): Response
     {
         $parentTaskId = $request->query->get('parent_task_id');;
@@ -47,7 +51,7 @@ final class TaskController extends AbstractController
             'Tasks/task_form/task_create/index.html.twig',
             [
                 'parentTask' => $parentTask,
-                'statuses' => $statusRepository->all()
+                'statuses' => $statusMapper->mapById($statusRepository->all()),
             ]
         );
     }
@@ -57,27 +61,24 @@ final class TaskController extends AbstractController
         Request $request,
         ValidatorInterface $validator,
         TaskServiceInterface $taskService,
-        TaskRepositoryInterface $taskRepository,
-        StatusRepositoryInterface $statusRepository
+        StatusRepositoryInterface $statusRepository,
+        StatusMapperInterface $statusMapper
     ): Response {
-        $parentTaskId = $request->request->get('parent_task_id');
-        $parentTask = $parentTaskId ? $taskRepository->findOneById($parentTaskId) : null;
-
-        $dto = new TaskCreateDto();
-        $errors = $validator->validate($dto->fromRequest($request));
+        $dto = TaskCreateDto::fromRequest($request);
+        $errors = $validator->validate($dto);
 
         if (count($errors) > 0) {
             return $this->render(
                 'Tasks/task_form/task_create/index.html.twig',
                 [
-                    'parent_task_id' => $parentTask,
-                    'statuses' => $statusRepository->all(),
+                    'parentTaskId' => $dto->parentTaskId,
+                    'statuses' => $statusMapper->mapById($statusRepository->all()),
                     'errors' => $errors
                 ]
             );
         }
 
-        $taskService->createTask($dto, $parentTask);
+        $taskService->createTask($dto);
 
         return $this->redirectToRoute('app_task_dashboard');
     }
@@ -87,13 +88,14 @@ final class TaskController extends AbstractController
         int $id,
         TaskRepositoryInterface $taskRepository, 
         StatusRepositoryInterface $statusRepository,
+        StatusMapperInterface $statusMapper
     ): Response
     {
         return $this->render(
             'Tasks//task_form/task_edit/index.html.twig',
             [
-                'task' => $taskRepository->findOneById($id),
-                'statuses' => $statusRepository->all()
+                'task' => TaskDto::fromEntity($taskRepository->findOneById($id)),
+                'statuses' => $statusMapper->mapById($statusRepository->all())
             ]
         );
     }
@@ -103,22 +105,23 @@ final class TaskController extends AbstractController
         Request $request,
         ValidatorInterface $validator,
         TaskServiceInterface $taskService,
-        StatusRepositoryInterface $statusRepository
+        StatusRepositoryInterface $statusRepository,
+        StatusMapperInterface $statusMapper
     ): Response {
-        // $dto = new TaskCreateDto();
-        // $errors = $validator->validate($dto->fromRequest($request));
+        $dto = TaskDto::fromRequest($request);
+        $errors = $validator->validate($dto);
 
-        // if (count($errors) > 0) {
-        //     return $this->render(
-        //         'Tasks/task_form/task_create/index.html.twig',
-        //         [
-        //             'statuses' => $statusRepository->all(),
-        //             'errors' => $errors
-        //         ]
-        //     );
-        // }
+        if (count($errors) > 0) {
+            return $this->render(
+                'Tasks/task_form/task_create/index.html.twig',
+                [
+                    'statuses' => $statusMapper->mapById($statusRepository->all()),
+                    'errors' => $errors
+                ]
+            );
+        }
 
-        // $taskService->createTask($dto);
+        $taskService->updateTask($dto);
 
         return $this->redirectToRoute('app_task_dashboard');
     }
