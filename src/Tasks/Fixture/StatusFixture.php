@@ -18,8 +18,8 @@ class StatusFixture extends Fixture
     
     public function load(ObjectManager $manager): void
     {
-        $this->service->createStatus(StatusEnum::PENDING->value, 1);
-        $this->service->createStatus(StatusEnum::DONE->value, 2);
-        $this->service->createStatus(StatusEnum::REJECTED->value, 3);
+        $this->service->createStatus(StatusEnum::PENDING->value, 1, 'secondary');
+        $this->service->createStatus(StatusEnum::DONE->value, 2, 'success');
+        $this->service->createStatus(StatusEnum::REJECTED->value, 3, 'danger');
     }
 }

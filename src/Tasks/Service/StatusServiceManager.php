@@ -16,11 +16,12 @@ class StatusServiceManager implements StatusManagerServiceInterface
         $this->em = $em;
     }
 
-    public function createStatus(string $value, int $sequence): StatusDto
+    public function createStatus(string $value, int $sequence, string $color): StatusDto
     {
         $status = new Status();
         $status->setLabel($value);
         $status->setSequence($sequence);
+        $status->setColor($color);
 
         $this->em->persist($status);
         $this->em->flush();

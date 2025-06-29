@@ -10,6 +10,7 @@ readonly class StatusDto
         public ?int $id,
         public string $label,
         public int $sequence,
+        public string $color,
     ) {}
 
     public static function fromEntity(Status $status): self
@@ -17,7 +18,8 @@ readonly class StatusDto
         return new self(
             $status->getId(),
             $status->getLabel(),
-            $status->getSequence()
+            $status->getSequence(),
+            $status->getColor()
         );
     }
 }

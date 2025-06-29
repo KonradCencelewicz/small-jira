@@ -6,5 +6,5 @@ use App\Tasks\Dto\StatusDto;
 
 interface StatusManagerServiceInterface
 {
-    public function createStatus(string $value, int $sequence): StatusDto;
+    public function createStatus(string $value, int $sequence, string $color): StatusDto;
 }
